@@ -1,101 +1,949 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Генератор идей для постов</title>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f8;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 700px;
-            margin: auto;
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
-        ul {
-            padding-left: 20px;
-        }
-
-        li {
-            margin-bottom: 10px;
-            font-size: 18px;
-        }
-
-        button {
-            margin-top: 20px;
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            background-color: #4CAF50;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        #result {
-            margin-top: 20px;
-            font-size: 20px;
-            text-align: center;
-            color: #222;
-        }
-    </style>
-</head>
-
-<body>
-
-<div class="container">
-    <h1>Генератор идей для постов</h1>
-
-    <ul>
-        <li>Идеи постов для экспертов</li>
-        <li>Идеи сторис на сегодня</li>
-        <li>Контент-план на неделю</li>
-    </ul>
-
-    <button onclick="generateIdea()">Получить идею</button>
-
-    <div id="result"></div>
-</div>
-
-<script>
-    const ideas = [
-        "Расскажите свою историю: как вы пришли в профессию",
-        "Покажите закулисье своей работы",
-        "Разберите частую ошибку клиентов",
-        "Дайте 3 полезных совета по вашей теме",
-        "Сделайте мини-разбор кейса",
-        "Ответьте на популярный вопрос",
-        "Поделитесь своим мнением по теме",
-        "Покажите до/после",
-        "Составьте чек-лист",
-        "Расскажите про свой рабочий день"
-    ];
-
-    function generateIdea() {
-        const randomIndex = Math.floor(Math.random() * ideas.length);
-        document.getElementById("result").innerText = ideas[randomIndex];
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Content Flow Studio</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --bg-soft: #eef3f8;
+      --card: rgba(255,255,255,0.82);
+      --text: #1e2430;
+      --muted: #5f6b7a;
+      --line: rgba(120, 134, 156, 0.18);
+      --accent: #5d7cff;
+      --accent-2: #7c5cff;
+      --good: #24a36a;
+      --shadow: 0 16px 40px rgba(28, 37, 54, 0.10);
     }
-</script>
 
+    body.dark {
+      --bg: #0f1522;
+      --bg-soft: #151c2d;
+      --card: rgba(23, 31, 49, 0.86);
+      --text: #f2f5fb;
+      --muted: #a6b1c2;
+      --line: rgba(173, 186, 204, 0.14);
+      --accent: #8ca4ff;
+      --accent-2: #b08cff;
+      --good: #52d49a;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(125, 145, 255, 0.18), transparent 30%),
+        radial-gradient(circle at top right, rgba(157, 117, 255, 0.14), transparent 28%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
+      color: var(--text);
+      transition: background 0.25s ease, color 0.25s ease;
+      min-height: 100vh;
+    }
+
+    .app {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .brand {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .brand-text h1 {
+      margin: 0 0 4px;
+      font-size: 30px;
+      letter-spacing: -0.4px;
+    }
+
+    .brand-text p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+      margin-bottom: 20px;
+    }
+
+    .glass {
+      background: var(--card);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-main {
+      padding: 28px;
+    }
+
+    .hero-main h2 {
+      margin: 0 0 12px;
+      font-size: 34px;
+      line-height: 1.12;
+      letter-spacing: -0.5px;
+    }
+
+    .hero-main p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.6;
+      max-width: 780px;
+    }
+
+    .chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      color: var(--text);
+      background: rgba(255,255,255,0.35);
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+    }
+
+    body.dark .chip {
+      background: rgba(255,255,255,0.04);
+    }
+
+    .hero-side {
+      padding: 24px;
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .mini-stat {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.42);
+      border: 1px solid var(--line);
+    }
+
+    body.dark .mini-stat {
+      background: rgba(255,255,255,0.03);
+    }
+
+    .mini-stat strong {
+      display: block;
+      font-size: 28px;
+      margin-bottom: 4px;
+    }
+
+    .mini-stat span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 20px;
+    }
+
+    .sidebar, .workspace {
+      min-height: 400px;
+    }
+
+    .sidebar {
+      padding: 22px;
+    }
+
+    .workspace {
+      padding: 22px;
+    }
+
+    .section-title {
+      margin: 0 0 14px;
+      font-size: 20px;
+    }
+
+    .muted {
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .buttons, .quick-actions {
+      display: grid;
+      gap: 10px;
+    }
+
+    .quick-actions {
+      grid-template-columns: 1fr 1fr;
+      margin-top: 14px;
+    }
+
+    button, select, input, textarea {
+      font: inherit;
+    }
+
+    .btn {
+      width: 100%;
+      border: 1px solid transparent;
+      border-radius: 16px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: transform 0.18s ease, opacity 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 10px 24px rgba(93,124,255,0.26);
+    }
+
+    .btn-soft {
+      background: rgba(255,255,255,0.42);
+      color: var(--text);
+      border-color: var(--line);
+    }
+
+    body.dark .btn-soft {
+      background: rgba(255,255,255,0.04);
+    }
+
+    .btn-small {
+      width: auto;
+      padding: 11px 14px;
+      border-radius: 14px;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 12px;
+      margin: 18px 0;
+    }
+
+    .field label {
+      display: block;
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .field select, .field input {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.46);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 12px 14px;
+      outline: none;
+    }
+
+    body.dark .field select,
+    body.dark .field input {
+      background: rgba(255,255,255,0.04);
+    }
+
+    .result-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .result-box {
+      min-height: 420px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255,255,255,0.35);
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    body.dark .result-box {
+      background: rgba(255,255,255,0.03);
+    }
+
+    .tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 10px 0 16px;
+    }
+
+    .tag {
+      font-size: 13px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: rgba(93,124,255,0.10);
+      color: var(--accent);
+      border: 1px solid rgba(93,124,255,0.12);
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      margin-top: 12px;
+      background: rgba(255,255,255,0.48);
+      animation: fadeIn 0.24s ease;
+    }
+
+    body.dark .card {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .card h4 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .card p {
+      margin: 0;
+      line-height: 1.65;
+    }
+
+    .plan-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .floating-toggle {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      border: none;
+      border-radius: 999px;
+      padding: 14px 18px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      box-shadow: 0 14px 30px rgba(93,124,255,0.28);
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .empty-state {
+      display: grid;
+      place-items: center;
+      min-height: 360px;
+      text-align: center;
+      color: var(--muted);
+      padding: 20px;
+    }
+
+    .empty-state h3 {
+      margin: 0 0 8px;
+      color: var(--text);
+      font-size: 26px;
+    }
+
+    .footer-text {
+      margin-top: 14px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .success {
+      color: var(--good);
+      font-weight: bold;
+      font-size: 14px;
+      margin-left: 6px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 980px) {
+      .hero, .layout, .two-col {
+        grid-template-columns: 1fr;
+      }
+      .brand-text h1 {
+        font-size: 24px;
+      }
+      .hero-main h2 {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">CF</div>
+        <div class="brand-text">
+          <h1>Content Flow Studio</h1>
+          <p>Красивый интерактивный помощник для идей, сторис и контент-планов</p>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <button class="btn btn-soft btn-small" onclick="fillDemo()">Заполнить демо</button>
+        <button class="btn btn-soft btn-small" onclick="surpriseMe()">Случайный режим</button>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div class="hero-main glass">
+        <h2>Не просто кнопка, а уже маленький рабочий сервис ✨</h2>
+        <p>
+          Здесь можно выбрать нишу, стиль подачи и аудиторию, а потом получить идею поста,
+          сторис на сегодня, недельный план, рубрики, заголовок и даже мини-описание для публикации.
+        </p>
+
+        <div class="chips">
+          <div class="chip">светлая и тёмная тема</div>
+          <div class="chip">красивые карточки</div>
+          <div class="chip">живой интерфейс</div>
+          <div class="chip">копирование результата</div>
+          <div class="chip">случайные сценарии</div>
+        </div>
+      </div>
+
+      <div class="hero-side glass">
+        <div class="mini-stat">
+          <strong>6</strong>
+          <span>активных генераторов внутри</span>
+        </div>
+        <div class="mini-stat">
+          <strong>4</strong>
+          <span>ниши для демонстрации</span>
+        </div>
+        <div class="mini-stat">
+          <strong>1</strong>
+          <span>готовый HTML-файл без зависимостей</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="layout">
+      <aside class="sidebar glass">
+        <h3 class="section-title">Настройки</h3>
+        <p class="muted">Слева задаёшь параметры, справа получаешь красивый результат.</p>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="niche">Ниша</label>
+            <select id="niche">
+              <option value="beauty">Бьюти / косметология</option>
+              <option value="smm">SMM / продвижение</option>
+              <option value="education">Обучение / экспертность</option>
+              <option value="handmade">Хендмейд / изделия</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="tone">Тон подачи</label>
+            <select id="tone">
+              <option value="expert">Экспертный</option>
+              <option value="friendly">Дружелюбный</option>
+              <option value="light">Лёгкий и живой</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="audience">Для кого</label>
+            <input id="audience" type="text" placeholder="Например: для пациентов, для мастеров, для мам" />
+          </div>
+
+          <div class="field">
+            <label for="goal">Цель контента</label>
+            <select id="goal">
+              <option value="engagement">Вовлечение</option>
+              <option value="expert">Показать экспертность</option>
+              <option value="trust">Повысить доверие</option>
+              <option value="sales">Мягко подвести к услуге</option>
+            </select>
+          </div>
+        </div>
+
+        <h3 class="section-title">Генераторы</h3>
+        <div class="buttons">
+          <button class="btn btn-primary" onclick="generatePostIdea()">Идея поста</button>
+          <button class="btn btn-primary" onclick="generateStories()">Сторис на сегодня</button>
+          <button class="btn btn-primary" onclick="generateWeekPlan()">План на неделю</button>
+          <button class="btn btn-soft" onclick="generateHook()">Цепляющий заголовок</button>
+          <button class="btn btn-soft" onclick="generateRubrics()">Рубрики для блога</button>
+          <button class="btn btn-soft" onclick="generateMiniCaption()">Мини-подпись к посту</button>
+        </div>
+
+        <div class="quick-actions">
+          <button class="btn btn-soft" onclick="copyResult()">Скопировать</button>
+          <button class="btn btn-soft" onclick="clearResult()">Очистить</button>
+        </div>
+
+        <p class="footer-text">Файл можно открыть прямо в браузере. Всё работает без Cursor и без интернета.</p>
+      </aside>
+
+      <main class="workspace glass">
+        <div class="result-head">
+          <div>
+            <h3 class="section-title" style="margin-bottom: 4px;">Результат</h3>
+            <div class="muted">Здесь появляется сгенерированный контент</div>
+          </div>
+          <div id="copyStatus" class="success"></div>
+        </div>
+
+        <div id="result" class="result-box">
+          <div class="empty-state">
+            <div>
+              <h3>Добро пожаловать 👋</h3>
+              <p>
+                Выбери нишу и нажми одну из кнопок слева.<br>
+                Можешь сразу протестировать идею поста, сторис или недельный план.
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </section>
+  </div>
+
+  <button class="floating-toggle" onclick="toggleTheme()">Сменить тему</button>
+
+  <script>
+    const contentData = {
+      beauty: {
+        tags: ["кожа", "уход", "наблюдения", "процедуры"],
+        posts: [
+          "Почему кожа в переходный сезон может реагировать сильнее обычного",
+          "Как мягко подготовить кожу к процедурам без перегруза",
+          "3 домашние ошибки, которые я замечаю у пациентов чаще всего",
+          "Что важно учитывать перед депиляцией весной и летом",
+          "Как понять, что коже сейчас нужен покой и восстановление"
+        ],
+        stories: [
+          "Сторис 1: мягкий вопрос — «Как сейчас ощущает себя ваша кожа?»",
+          "Сторис 2: короткое наблюдение о сухости, чувствительности или текстуре",
+          "Сторис 3: один понятный совет по домашнему уходу",
+          "Сторис 4: мини-разбор частой ошибки",
+          "Сторис 5: спокойный вопрос для вовлечения без давления"
+        ],
+        week: [
+          { day: "Понедельник", title: "Сезонное наблюдение", text: "Рассказать, как кожа меняется с приходом тепла и почему это естественно." },
+          { day: "Вторник", title: "Практический совет", text: "Показать простой и понятный шаг домашнего ухода." },
+          { day: "Среда", title: "Ошибка", text: "Разобрать привычку, которая делает кожу более реактивной." },
+          { day: "Четверг", title: "Экспертный акцент", text: "Пояснить, как определить, когда коже нужна помощь специалиста." },
+          { day: "Пятница", title: "Личный опыт", text: "Поделиться тем, что вы чаще всего видите на приёме." },
+          { day: "Суббота", title: "Миф или факт", text: "Разобрать один популярный миф о коже и уходе." },
+          { day: "Воскресенье", title: "Мягкое вовлечение", text: "Задать аудитории спокойный вопрос по ощущениям кожи." }
+        ],
+        hooks: [
+          "Почему кожа вдруг стала реагировать сильнее",
+          "Что чаще всего перегружает домашний уход",
+          "Ошибка, которую я вижу у пациентов снова и снова",
+          "Небольшой ориентир, который помогает не переборщить"
+        ],
+        rubrics: ["Сезонные изменения кожи", "Разбор домашнего ухода", "Мифы о процедурах", "Вопросы пациентов", "Наблюдения из практики"],
+        captions: [
+          "Иногда коже нужно не больше средств, а чуть больше понимания.",
+          "Спокойный уход часто даёт коже больше, чем активная перегрузка.",
+          "Маленькие изменения в домашнем уходе могут ощущаться очень заметно."
+        ]
+      },
+      smm: {
+        tags: ["контент", "система", "упаковка", "вовлечение"],
+        posts: [
+          "Почему контент есть, а ощущения системы всё равно нет",
+          "3 причины, почему эксперт снова откладывает публикации",
+          "Как упростить контент-план, чтобы он не давил",
+          "Какие форматы лучше чередовать в экспертном блоге",
+          "Что мешает вести соцсети стабильно даже при хороших знаниях"
+        ],
+        stories: [
+          "Сторис 1: показать рабочий момент без идеальности",
+          "Сторис 2: задать аудитории вопрос про их опыт с контентом",
+          "Сторис 3: дать один практичный совет",
+          "Сторис 4: показать мини-кейс или заметку из практики",
+          "Сторис 5: пригласить ответить реакцией или сообщением"
+        ],
+        week: [
+          { day: "Понедельник", title: "Экспертный пост", text: "Разобрать одну частую проблему аудитории." },
+          { day: "Вторник", title: "Личный пост", text: "Показать наблюдение, мысль или рабочий фрагмент дня." },
+          { day: "Среда", title: "Подборка", text: "Дать 5 коротких и полезных пунктов по теме." },
+          { day: "Четверг", title: "История", text: "Рассказать реальную ситуацию или путь клиента." },
+          { day: "Пятница", title: "Ошибка", text: "Показать, где обычно теряется результат." },
+          { day: "Суббота", title: "Лёгкое вовлечение", text: "Задать мягкий вопрос, который хочется обсудить." },
+          { day: "Воскресенье", title: "Система", text: "Поделиться, как вы планируете контент без хаоса." }
+        ],
+        hooks: [
+          "Почему контент-план не работает, даже когда он есть",
+          "Что обычно тормозит эксперта в блоге",
+          "Одна мысль, которая сильно упрощает ведение соцсетей",
+          "Как перестать делать контент ради галочки"
+        ],
+        rubrics: ["Разбор частых ошибок", "Контент без выгорания", "Закулисье работы", "Мини-кейсы", "Упрощение системы"],
+        captions: [
+          "Иногда лучший контент — не самый сложный, а самый понятный.",
+          "Система в блоге начинается не с идеальности, а с ясности.",
+          "Когда контент проще, вести его становится в разы легче."
+        ]
+      },
+      education: {
+        tags: ["обучение", "практика", "структура", "понятность"],
+        posts: [
+          "Почему ученикам мало просто теории",
+          "Как объяснять сложное простыми словами",
+          "3 ошибки в обучении, из-за которых знания не закрепляются",
+          "Как сделать материал понятнее и живее",
+          "Почему короткие шаги помогают дойти до результата"
+        ],
+        stories: [
+          "Сторис 1: один инсайт из обучения",
+          "Сторис 2: частый вопрос ученика",
+          "Сторис 3: короткое объяснение сложного термина",
+          "Сторис 4: небольшое задание для вовлечения",
+          "Сторис 5: показать результат или прогресс"
+        ],
+        week: [
+          { day: "Понедельник", title: "База", text: "Объяснить одну ключевую идею простыми словами." },
+          { day: "Вторник", title: "Практика", text: "Дать маленькое упражнение по теме." },
+          { day: "Среда", title: "Ошибка новичка", text: "Разобрать типичную трудность на старте." },
+          { day: "Четверг", title: "Кейс", text: "Показать путь ученика или маленький результат." },
+          { day: "Пятница", title: "Поддержка", text: "Снять лишнее напряжение и показать путь по шагам." },
+          { day: "Суббота", title: "Чек-лист", text: "Собрать полезную короткую подборку." },
+          { day: "Воскресенье", title: "Рефлексия", text: "Предложить отметить свой прогресс и наблюдения." }
+        ],
+        hooks: [
+          "Почему знания не переходят в практику",
+          "С чего лучше начинать, чтобы не перегореть",
+          "Что помогает усваивать материал быстрее",
+          "Ошибка, которая замедляет обучение"
+        ],
+        rubrics: ["Понятно о сложном", "Вопросы учеников", "Практика по шагам", "Ошибки новичков", "Маленькие победы"],
+        captions: [
+          "Когда материал понятный, у человека появляется желание идти дальше.",
+          "Хорошее обучение ощущается как путь по шагам, а не как перегруз.",
+          "Иногда один ясный пример объясняет больше, чем длинная теория."
+        ]
+      },
+      handmade: {
+        tags: ["образ", "детали", "ручная работа", "настроение"],
+        posts: [
+          "Почему у ручной работы всегда есть своё настроение",
+          "Как рождается образ игрушки или изделия",
+          "Что делает вещь по-настоящему тёплой и запоминающейся",
+          "Почему ручную работу невозможно повторить идеально одинаково",
+          "Из каких деталей складывается характер изделия"
+        ],
+        stories: [
+          "Сторис 1: показать материалы крупным планом",
+          "Сторис 2: кусочек процесса",
+          "Сторис 3: деталь, которую хочется рассматривать",
+          "Сторис 4: история образа",
+          "Сторис 5: вопрос о любимых деталях"
+        ],
+        week: [
+          { day: "Понедельник", title: "История образа", text: "Рассказать, как появилась идея новой работы." },
+          { day: "Вторник", title: "Материалы", text: "Показать, почему выбраны именно эти ткани, фактуры или детали." },
+          { day: "Среда", title: "Характер изделия", text: "Сделать акцент на мелочах, которые оживляют образ." },
+          { day: "Четверг", title: "Процесс", text: "Показать один из этапов создания работы." },
+          { day: "Пятница", title: "Эмоция", text: "Поделиться настроением изделия и ощущением от него." },
+          { day: "Суббота", title: "Закулисье", text: "Показать рабочий стол или момент сборки." },
+          { day: "Воскресенье", title: "Вовлечение", text: "Спросить, какая деталь больше всего цепляет зрителя." }
+        ],
+        hooks: [
+          "Иногда всё решает одна маленькая деталь",
+          "У этой работы был свой характер с самого начала",
+          "Вот за что я люблю ручную работу больше всего",
+          "Как в изделии появляется настроение"
+        ],
+        rubrics: ["Истории образов", "Материалы и фактуры", "Закулисье процесса", "Детали крупным планом", "Настроение изделия"],
+        captions: [
+          "В ручной работе часто самое важное живёт именно в деталях.",
+          "Каждая новая работа приходит со своим настроением.",
+          "Иногда одна маленькая деталь делает образ цельным."
+        ]
+      }
+    };
+
+    function getState() {
+      const niche = document.getElementById("niche").value;
+      const tone = document.getElementById("tone").value;
+      const audience = document.getElementById("audience").value.trim() || "для вашей аудитории";
+      const goal = document.getElementById("goal").value;
+      return { niche, tone, audience, goal, data: contentData[niche] };
+    }
+
+    function toneText(tone) {
+      if (tone === "expert") return "Подача: экспертная, спокойная, аргументированная.";
+      if (tone === "friendly") return "Подача: тёплая, дружелюбная, понятная.";
+      return "Подача: лёгкая, живая, с мягкой интонацией.";
+    }
+
+    function goalText(goal) {
+      if (goal === "engagement") return "Цель: мягко вовлечь аудиторию в диалог.";
+      if (goal === "expert") return "Цель: показать экспертность и глубину.";
+      if (goal === "trust") return "Цель: усилить доверие и ощущение надёжности.";
+      return "Цель: аккуратно подвести к интересу к услуге или продукту.";
+    }
+
+    function randomItem(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function tagsHtml(tags) {
+      return `<div class="tags">${tags.map(tag => `<span class="tag">${tag}</span>`).join("")}</div>`;
+    }
+
+    function render(title, inner, tags = []) {
+      document.getElementById("result").innerHTML = `
+        <div>
+          <h3 style="margin: 0 0 8px; font-size: 28px;">${title}</h3>
+          ${tags.length ? tagsHtml(tags) : ""}
+          ${inner}
+        </div>
+      `;
+      document.getElementById("copyStatus").textContent = "";
+    }
+
+    function generatePostIdea() {
+      const { data, tone, audience, goal } = getState();
+      const idea = randomItem(data.posts);
+      render(
+        "Идея поста",
+        `
+          <div class="card">
+            <h4>Тема</h4>
+            <p>${idea}</p>
+          </div>
+          <div class="two-col">
+            <div class="card">
+              <h4>Как подать</h4>
+              <p>${toneText(tone)}</p>
+            </div>
+            <div class="card">
+              <h4>Задача</h4>
+              <p>${goalText(goal)}</p>
+            </div>
+          </div>
+          <div class="card">
+            <h4>Для кого</h4>
+            <p>${audience}</p>
+          </div>
+          <div class="card">
+            <h4>Структура</h4>
+            <p>Начни с наблюдения или вопроса, затем дай понятное объяснение и заверши 2–3 практическими мыслями.</p>
+          </div>
+        `,
+        data.tags
+      );
+    }
+
+    function generateStories() {
+      const { data, audience, tone } = getState();
+      render(
+        "Сторис на сегодня",
+        `
+          <div class="card">
+            <h4>Серия сторис</h4>
+            <div class="plan-grid">
+              ${data.stories.map(item => `<div class="card"><p>${item}</p></div>`).join("")}
+            </div>
+          </div>
+          <div class="two-col">
+            <div class="card">
+              <h4>Аудитория</h4>
+              <p>${audience}</p>
+            </div>
+            <div class="card">
+              <h4>Тон</h4>
+              <p>${toneText(tone)}</p>
+            </div>
+          </div>
+        `,
+        data.tags
+      );
+    }
+
+    function generateWeekPlan() {
+      const { data, audience, goal } = getState();
+      render(
+        "План на неделю",
+        `
+          <div class="card">
+            <h4>Недельная сетка</h4>
+            <div class="plan-grid">
+              ${data.week.map(day => `
+                <div class="card">
+                  <h4>${day.day} — ${day.title}</h4>
+                  <p>${day.text}</p>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+          <div class="two-col">
+            <div class="card">
+              <h4>Для кого</h4>
+              <p>${audience}</p>
+            </div>
+            <div class="card">
+              <h4>Фокус</h4>
+              <p>${goalText(goal)}</p>
+            </div>
+          </div>
+        `,
+        data.tags
+      );
+    }
+
+    function generateHook() {
+      const { data } = getState();
+      render(
+        "Цепляющий заголовок",
+        `
+          <div class="card">
+            <h4>Вариант</h4>
+            <p>${randomItem(data.hooks)}</p>
+          </div>
+          <div class="card">
+            <h4>Подсказка</h4>
+            <p>Используй этот заголовок как старт поста, карусели или первой сторис.</p>
+          </div>
+        `,
+        data.tags
+      );
+    }
+
+    function generateRubrics() {
+      const { data } = getState();
+      render(
+        "Рубрики для блога",
+        `
+          <div class="card">
+            <h4>Подборка рубрик</h4>
+            <div class="plan-grid">
+              ${data.rubrics.map(item => `<div class="card"><p>${item}</p></div>`).join("")}
+            </div>
+          </div>
+        `,
+        data.tags
+      );
+    }
+
+    function generateMiniCaption() {
+      const { data, audience } = getState();
+      render(
+        "Мини-подпись к посту",
+        `
+          <div class="card">
+            <h4>Готовый вариант</h4>
+            <p>${randomItem(data.captions)}</p>
+          </div>
+          <div class="card">
+            <h4>Ориентир</h4>
+            <p>Текст подойдёт ${audience} и может стать мягким завершением поста или подписью к изображению.</p>
+          </div>
+        `,
+        data.tags
+      );
+    }
+
+    function clearResult() {
+      document.getElementById("result").innerHTML = `
+        <div class="empty-state">
+          <div>
+            <h3>Результат очищен</h3>
+            <p>Выбери любой генератор слева и продолжай тестировать сайт.</p>
+          </div>
+        </div>
+      `;
+      document.getElementById("copyStatus").textContent = "";
+    }
+
+    function copyResult() {
+      const text = document.getElementById("result").innerText.trim();
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => {
+        const el = document.getElementById("copyStatus");
+        el.textContent = "Скопировано";
+        setTimeout(() => el.textContent = "", 1600);
+      });
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+      localStorage.setItem("cfs-theme", document.body.classList.contains("dark") ? "dark" : "light");
+    }
+
+    function fillDemo() {
+      document.getElementById("niche").value = "smm";
+      document.getElementById("tone").value = "light";
+      document.getElementById("audience").value = "для экспертов, которые ведут блог нерегулярно";
+      document.getElementById("goal").value = "trust";
+      generateWeekPlan();
+    }
+
+    function surpriseMe() {
+      const niches = ["beauty", "smm", "education", "handmade"];
+      const tones = ["expert", "friendly", "light"];
+      const goals = ["engagement", "expert", "trust", "sales"];
+      const actions = [generatePostIdea, generateStories, generateWeekPlan, generateHook, generateRubrics, generateMiniCaption];
+
+      document.getElementById("niche").value = randomItem(niches);
+      document.getElementById("tone").value = randomItem(tones);
+      document.getElementById("goal").value = randomItem(goals);
+      document.getElementById("audience").value = "для тёплой и заинтересованной аудитории";
+      randomItem(actions)();
+    }
+
+    (function initTheme() {
+      const saved = localStorage.getItem("cfs-theme");
+      if (saved === "dark") {
+        document.body.classList.add("dark");
+      }
+    })();
+  </script>
 </body>
 </html>
