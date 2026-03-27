@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор идей для постов</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            text-align: center;
+            color: #222;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Генератор идей для постов</h1>
+
+    <ul>
+        <li>Идеи постов для экспертов</li>
+        <li>Идеи сторис на сегодня</li>
+        <li>Контент-план на неделю</li>
+    </ul>
+
+    <button onclick="generateIdea()">Получить идею</button>
+
+    <div id="result"></div>
+</div>
+
+<script>
+    const ideas = [
+        "Расскажите свою историю: как вы пришли в профессию",
+        "Покажите закулисье своей работы",
+        "Разберите частую ошибку клиентов",
+        "Дайте 3 полезных совета по вашей теме",
+        "Сделайте мини-разбор кейса",
+        "Ответьте на популярный вопрос",
+        "Поделитесь своим мнением по теме",
+        "Покажите до/после",
+        "Составьте чек-лист",
+        "Расскажите про свой рабочий день"
+    ];
+
+    function generateIdea() {
+        const randomIndex = Math.floor(Math.random() * ideas.length);
+        document.getElementById("result").innerText = ideas[randomIndex];
+    }
+</script>
+
+</body>
+</html>
